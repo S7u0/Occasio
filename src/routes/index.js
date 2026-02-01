@@ -3,7 +3,7 @@ const router = express.Router();
 
 const roleRoutes = require('./roleRoutes');
 const userRoutes = require('./userRoutes');
-const paymentRoutes = require('./paymentRoutes');
+const paymentRoutes = require('./permissionRoutes');
 const venueRoutes = require('./venueRoutes');
 
 const withModule = (modulePath, router) => {
