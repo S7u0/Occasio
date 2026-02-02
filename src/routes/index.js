@@ -6,11 +6,6 @@ const userRoutes = require('./userRoutes');
 const paymentRoutes = require('./permissionRoutes');
 const venueRoutes = require('./venueRoutes');
 
-const withModule = (modulePath, router) => {
-	router.__modulePath = modulePath;
-	return router;
-};
-
 router.use('/role', roleRoutes);
 router.use('/user', userRoutes);
 router.use('/payment', paymentRoutes);
