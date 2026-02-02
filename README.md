@@ -85,8 +85,8 @@ src/
 3. **Configure environment variables**
    Create a `.env` file in the root directory:
    ```env
-   PORT=5000
-   MONGO_URI=mongodb://localhost:27017/occasio
+   PORT=port_number
+   MONGO_URI=your_database_link
    JWT_ACCESS_SECRET=your_jwt_access_secret
    NODE_ENV=development
    ```
