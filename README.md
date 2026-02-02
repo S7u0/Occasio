@@ -1,10 +1,10 @@
-# WedStack
+# Occasio
 
-A robust and scalable Node.js backend for wedding management, built with Express.js and MongoDB, featuring comprehensive role-based access control (RBAC) and user management capabilities for coordinating wedding events.
+A robust and scalable Node.js backend for event management, built with Express.js and MongoDB, featuring comprehensive role-based access control (RBAC) and user management capabilities for coordinating events.
 
 ## Overview
 
-WedStack is a comprehensive wedding management platform backend that provides secure authentication, user management, role-based authorization, and permission management. Built with modern Node.js practices, it ensures security, maintainability, and scalability for managing wedding-related operations and stakeholder roles.
+Occasio is a comprehensive event management platform backend that provides secure authentication, user management, role-based authorization, and permission management. Built with modern Node.js practices, it ensures security, maintainability, and scalability for managing wedding-related operations and stakeholder roles.
 
 ## Key Features
 
@@ -33,33 +33,36 @@ WedStack is a comprehensive wedding management platform backend that provides se
 
 ```
 src/
-├── app.js                    # Express app configuration
-├── server.js                 # Server entry point
+├── server.js                 # Server entry point (connects DB, runs autoSyncPer)
 ├── config/
 │   └── db.js                 # MongoDB connection setup
 ├── constants/
 │   └── statusCodes.js        # HTTP status codes
 ├── controller/
 │   ├── roleController.js     # Role management logic
-│   └── userController.js     # User management logic
+│   ├── userController.js     # User management logic
+│   └── venueController.js    # Venue preference logic
 ├── middleware/
 │   ├── authenticate.js       # JWT authentication
 │   ├── authorize.js          # Role-based authorization
 │   ├── autoSyncPer.js        # Permission auto-sync
-│   ├── descriptor.js         # Middleware utilities
+│   ├── descriptor.js         # Middleware utilities (permission descriptors)
 │   ├── errorHandler.js       # Centralized error handling
 │   └── validateBody.js       # Request validation
 ├── model/
 │   ├── permission.js         # Permission schema
 │   ├── role.js               # Role schema
-│   └── user.js               # User schema
+│   ├── user.js               # User schema
+│   └── venuePreference.js    # Venue preference schema
 ├── routes/
-│   ├── permissionRoutes.js   # Permission endpoints
+│   ├── permissionRoutes.js   # Payment/permission endpoints (use descriptors)
 │   ├── roleRoutes.js         # Role endpoints
-│   └── userRoutes.js         # User endpoints
+│   ├── userRoutes.js         # User endpoints
+│   └── venueRoutes.js        # Venue preference endpoints
 ├── service/
 │   ├── roleServices.js       # Role business logic
-│   └── userServices.js       # User business logic
+│   ├── userServices.js       # User business logic
+│   └── venueServices.js      # Venue business logic
 └── utils/
     ├── response.js           # Response formatting utility
     ├── schema.js             # Validation schemas
@@ -71,7 +74,7 @@ src/
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd wedstack
+   cd occasio
    ```
 
 2. **Install dependencies**
@@ -83,8 +86,8 @@ src/
    Create a `.env` file in the root directory:
    ```env
    PORT=5000
-   MONGODB_URI=mongodb://localhost:27017/wedstack
-   JWT_SECRET=your_jwt_secret_key
+   MONGO_URI=mongodb://localhost:27017/occasio
+   JWT_ACCESS_SECRET=your_jwt_access_secret
    NODE_ENV=development
    ```
 
@@ -97,25 +100,32 @@ The server will start on the configured PORT (default: 5000) and automatically s
 
 ## API Endpoints
 
+Base path: `/api`
+
 ### Users
-- `POST /api/user/register` - Register a new user
-- `POST /api/user/login` - User login
-- `GET /api/user/:id` - Get user details
-- `PUT /api/user/:id` - Update user
-- `DELETE /api/user/:id` - Delete user
+- `POST /api/user/register` — Register a new user
+- `POST /api/user/login` — User login (returns JWT)
+- `POST /api/user/profile` — Create or update profile (requires Authorization)
+- `POST /api/user/weddingInfo` — Submit wedding info (requires Authorization)
+- `GET /api/user/view` — Public user view
 
 ### Roles
-- `POST /api/role` - Create a new role
-- `GET /api/role` - Get all roles
-- `GET /api/role/:id` - Get role details
-- `PUT /api/role/:id` - Update role
-- `DELETE /api/role/:id` - Delete role
+- `POST /api/role/create` — Create a new role
 
-### Permissions
-- `POST /api/permission` - Create a new permission
-- `GET /api/permission` - Get all permissions
-- `PUT /api/permission/:id` - Update permission
-- `DELETE /api/permission/:id` - Delete permission
+### Payment (permission descriptors)
+- `POST /api/payment/make_payment` — Descriptor: `payment.create`
+- `POST /api/payment/check_payment` — Descriptor: `payment.check`
+
+### Venue Preference
+- `POST /api/venuePreference/add` — Add a venue (requires Authorization, descriptor: `venuePreference.add`)
+- `GET /api/venuePreference/view` — List venues
+
+> Note: Protected routes require the header `Authorization: Bearer <token>`. Permissions are declared with `descriptor(...)` middleware and auto-synced to the database on server startup.
+
+How permission sync works
+- The `autoSyncPer` middleware scans registered routes for middleware that includes a `permission` descriptor (added by `descriptor(key, description)`).
+- Detected permissions are added/updated in the `permissions` collection and automatically pushed to the `ADMIN` role if missing.
+- This runs automatically when the server starts and keeps DB permissions in sync with route descriptors.
 
 ## Authentication
 
@@ -178,4 +188,4 @@ For support, please contact the development team or open an issue in the reposit
 ---
 
 **Version**: 1.0.0  
-**Last Updated**: January 2026
+**Last Updated**: February 2, 2026
