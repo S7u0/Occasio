@@ -74,34 +74,8 @@ const viewUser = async (email) => {
 	});
 };
 
-const profileUser = async (userId, data) => {
-	const user = await User.findById(userId);
-	if (!user) throw new Error('User not found');
-
-	user.username = data.username;
-	user.email = data.email;
-	user.phone = data.phone;
-	user.profile = data.profile;
-
-	await user.save();
-	return user;
-};
-
-const weddingInfoUser = async (userId, weddingData) => {
-	const user = await User.findById(userId);
-	if (!user) {
-		throw new Error('User not found');
-	}
-	user.wedding = weddingData.wedding;
-	console.log(user.wedding);
-	await user.save();
-	return user.wedding;
-};
-
 module.exports = {
 	registerUser,
 	loginUser,
 	viewUser,
-	profileUser,
-	weddingInfoUser,
 };
