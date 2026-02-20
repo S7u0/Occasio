@@ -4,8 +4,6 @@ const HTTP_STATUS = require('../constants/statusCodes');
 const {
 	registerUser,
 	loginUser,
-	profileUser,
-	weddingInfoUser,
 } = require('../service/userServices');
 
 const register = async (req, res) => {
@@ -24,21 +22,8 @@ const view = async (req, res) => {
 	res.json(user);
 };
 
-const profile = async (req, res) => {
-	await profileUser(req.user.id, req.body);
-	console.log(req.user.id);
-	return sendResponse(res, HTTP_STATUS.OK, 'Profile Updated');
-};
-
-const weddingInfo = async (req, res) => {
-	await weddingInfoUser(req.user.id, req.body);
-	return sendResponse(res, HTTP_STATUS.OK, 'WeddingInfo Updated');
-};
-
 module.exports = {
 	register,
 	login,
 	view,
-	profile,
-	weddingInfo,
 };
