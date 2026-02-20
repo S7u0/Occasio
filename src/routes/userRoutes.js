@@ -7,8 +7,6 @@ const wrapAsync = require('../utils/wrapAsync');
 const {
 	registerSchema,
 	loginSchema,
-	profileSchema,
-	weddingSchema
 } = require('../utils/schema');
 
 
@@ -22,20 +20,6 @@ router.post(
 	'/login',
 	validateBody(loginSchema),
 	wrapAsync(userController.login)
-);
-
-router.post(
-	'/profile',
-	validateBody(profileSchema),
-	isAuth,
-	wrapAsync(userController.profile)
-);
-
-router.post(
-	'/weddingInfo',
-	validateBody(weddingSchema),
-	isAuth,
-	wrapAsync(userController.weddingInfo)
 );
 
 router.get('/view', userController.view); 
