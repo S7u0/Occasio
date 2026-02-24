@@ -47,7 +47,6 @@ const updateEventController = async (req, res) => {
     const data = req.body;
     const updatedBy = req.user.id;
     data.updatedBy = updatedBy;
-    // console.log(data);
     const updatedEvent = await updateEvent(eventId, data);
     return sendResponse(res, HTTP_STATUS.OK, updatedEvent);
 };
