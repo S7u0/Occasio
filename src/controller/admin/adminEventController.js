@@ -17,8 +17,12 @@ const createEventController = async (req, res) => {
 };
 
 const viewEventsController = async (req, res) => {
-    const events = await viewEvents();
-    return sendResponse(res, HTTP_STATUS.OK, events);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+
+    const result = await viewEvents(page, limit);
+
+    return sendResponse(res, HTTP_STATUS.OK, message = "Event fetched successfully", result);
 };
 
 const viewEventDetailsController = async (req, res) => {
