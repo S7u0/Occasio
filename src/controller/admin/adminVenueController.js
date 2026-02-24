@@ -17,10 +17,8 @@ const createVenueController = async (req, res) => {
 };
 
 const viewVenuesController = async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const venues = await viewVenues(page, limit);
-    return sendResponse(res, HTTP_STATUS.OK, "Venues retrieved successfully", venues);
+    const venues = await viewVenues();
+    return sendResponse(res, HTTP_STATUS.OK, venues);
 };
 
 const viewVenueDetailsController = async (req, res) => {
