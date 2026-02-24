@@ -10,8 +10,11 @@ const createServiceController = async (req, res) => {
 };
 
 const viewServicesController = async (req, res) => {
-    const services = await adminService.viewServices(req, res);
-    return sendResponse(res, HTTP_STATUS.OK, services);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const services = await adminService.viewServices(page, limit);
+    return sendResponse(res, HTTP_STATUS.OK, "Services retrieved successfully", services);
 };
 
 const viewServiceDetailsController = async (req, res) => {
