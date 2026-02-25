@@ -1,4 +1,5 @@
 const { Event } = require('../../model/event');
+const { pagination } = require('../../utils/pagination');
 
 const createEvent = async (data) => {
 	const existingEvent = await Event.findOne({ code: data.code });
@@ -12,34 +13,7 @@ const createEvent = async (data) => {
 };
 
 const viewEvents = async (page, limit) => {
-	if (page < 1) page = 1;
-	if (limit > 100) limit = 100;
-
-	const skip = (page - 1) * limit;
-
-	const filter = {
-		deletedAt: null,
-	};
-
-	const totalRecords = await Event.countDocuments(filter);
-	const totalPages = Math.ceil(totalRecords / limit);
-
-	const events = await Event.find(filter)
-		.sort({ createdAt: -1 })
-		.skip(skip)
-		.limit(limit);
-
-	return {
-		pagination: {
-			totalRecords,
-			totalPages,
-			currentPage: page,
-			pageSize: limit,
-			hasNextPage: page < totalPages,
-			hasPrevPage: page > 1,
-		},
-		data: events,
-	};
+	return await pagination(page, limit, Event);
 };
 
 const viewEventDetails = async (eventId) => {

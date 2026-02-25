@@ -1,4 +1,5 @@
 const { venuePreference } = require('../../model/venuePreference');
+const { pagination } = require('../../utils/pagination');
 
 const createVenue = async (data) => {
     const existingVenue = await venuePreference.findOne({ code: data.code });
@@ -11,32 +12,7 @@ const createVenue = async (data) => {
 };
 
 const viewVenues = async (page, limit) => {
-    if (page < 1) page = 1;
-    if (limit > 100) limit = 100;
-
-    const skip = (page - 1) * limit;
-
-    const filter = {
-        deletedAt: null,
-    };
-    const totalRecords = await venuePreference.countDocuments(filter);
-    const totalPages = Math.ceil(totalRecords / limit);
-    const venues = await venuePreference.find(filter)
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit);
-
-    return {
-        pagination: {
-            totalRecords,
-            totalPages,
-            currentPage: page,
-            pageSize: limit,
-            hasNextPage: page < totalPages,
-            hasPrevPage: page > 1,
-        },
-        data: venues,
-    };
+    return await pagination(page, limit, venuePreference);
 };
 
 const viewVenueDetails = async (venueId) => {
