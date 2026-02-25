@@ -48,6 +48,11 @@ const serviceSchema = new Schema(
 	{ timestamps: true }
 );
 
+serviceSchema.pre(/^find/, function (next) {
+	this.where({ deletedAt: null });
+	next();
+});
+
 const Service = mongoose.model('Service', serviceSchema);
 
 module.exports = { Service };

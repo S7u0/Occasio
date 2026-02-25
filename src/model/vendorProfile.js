@@ -83,6 +83,11 @@ vendorSchema.index({ 'profile.venuePreferences': 1 });
 vendorSchema.index({ 'profile.servicePreferences.service': 1 });
 vendorSchema.index({ isActive: 1 });
 
+vendorSchema.pre(/^find/, function (next) {
+	this.where({ deletedAt: null });
+	next();
+});
+
 const vendor = mongoose.model('Vendor', vendorSchema);
 
 module.exports = { vendor };

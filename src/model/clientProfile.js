@@ -99,6 +99,11 @@ clientSchema.index({ 'wedding.venuePreferences': 1 });
 clientSchema.index({ 'wedding.servicePreferences': 1 });
 
 
+clientSchema.pre(/^find/, function (next) {
+	this.where({ deletedAt: null });
+	next();
+});
+
 const client = mongoose.model('Client', clientSchema);
 
 module.exports = { client };

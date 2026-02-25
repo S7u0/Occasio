@@ -117,4 +117,9 @@ userSchema.pre('save', async function () {
 	this.password = await bcrypt.hash(this.password, 15);
 });
 
+userSchema.pre(/^find/, function (next) {
+	this.where({ deletedAt: null });
+	next();
+});
+
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);
