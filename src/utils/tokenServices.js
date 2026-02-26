@@ -5,7 +5,6 @@ const ACCESS_EXPIRES = process.env.JWT_ACCESS_EXPIRES || '15m';
 const REFRESH_EXPIRES_DAYS = process.env.JWT_REFRESH_EXPIRES_DAYS || 7;
 
 const generateAccessToken = (payload) => {
-    // console.log(payload);
 	return jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
 		expiresIn: ACCESS_EXPIRES,
 	});

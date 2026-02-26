@@ -4,10 +4,8 @@ dotenv.config();
 const User = require('../model/user');
 const { Role } = require('../model/role');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
 const HTTP_STATUS = require('../constants/statusCodes');
-const tokenService = require('./tokenServices');
+const tokenService = require('../utils/tokenServices');
 
 const registerUser = async (data) => {
 	const { username, email, phone, password, role } = data;
