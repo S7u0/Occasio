@@ -13,7 +13,27 @@ const createEvent = async (data) => {
 };
 
 const viewEvents = async (page, limit) => {
-	return await pagination(page, limit, Event);
+
+	const filter = {
+		deletedAt: null,   v
+	};
+
+	const totalRecords = await Event.countDocuments(filter);
+	
+	const paginations = pagination(
+		page,
+		limit,
+		totalRecords,
+	);
+	const records = await Event.find(filter)
+		.sort({ createdAt: -1 })
+		.skip((page - 1) * limit)
+		.limit(limit);
+
+	return {
+		...paginations,
+		records,
+	};
 };
 
 const viewEventDetails = async (eventId) => {

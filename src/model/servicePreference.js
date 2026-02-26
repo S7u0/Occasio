@@ -50,7 +50,6 @@ const serviceSchema = new Schema(
 
 serviceSchema.pre(/^find/, function (next) {
 	this.where({ deletedAt: null });
-	next();
 });
 
 const Service = mongoose.model('Service', serviceSchema);

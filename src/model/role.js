@@ -15,7 +15,6 @@ const roleSchema = new mongoose.Schema({
 
 roleSchema.pre(/^find/, function (next) {
 	this.where({ deletedAt: null });
-	next();
 });
 
 module.exports = {

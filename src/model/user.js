@@ -45,67 +45,6 @@ const userSchema = new Schema(
 			type: Boolean,
 			default: true,
 		},
-		profile: {
-			gender: {
-				type: String,
-				enum: ['MALE', 'FEMALE', 'OTHER', 'Male', 'Female', 'Other'],
-			},
-
-			dateOfBirth: {
-				type: Date,
-			},
-
-			language: {
-				type: [String], // ["EN", "HI", "GU"]
-				default: ['EN'],
-			},
-
-			photo: {
-				type: String, // image URL
-				default: '',
-			},
-
-			location: {
-				city: String,
-				state: String,
-				country: {
-					type: String,
-					default: 'India',
-				},
-			},
-		},
-
-		wedding: {
-			eventDate: {
-				start: {
-					type: Date,
-				},
-				end: {
-					type: Date,
-				},
-			},
-
-			budget: {
-				type: Number,
-			},
-
-			guest: {
-				type: Number,
-			},
-
-			venuePreferences: [
-				{
-					type: mongoose.Types.ObjectId,
-					ref: 'VenuePreference',
-				},
-			],
-
-			customVenue: {
-				type: String,
-				trim: true,
-				maxlength: 150,
-			},
-		},
 	},
 	{
 		timestamps: true,
@@ -119,7 +58,6 @@ userSchema.pre('save', async function () {
 
 userSchema.pre(/^find/, function (next) {
 	this.where({ deletedAt: null });
-	next();
 });
 
 module.exports = mongoose.models.User || mongoose.model('User', userSchema);

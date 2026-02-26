@@ -85,7 +85,6 @@ vendorSchema.index({ isActive: 1 });
 
 vendorSchema.pre(/^find/, function (next) {
 	this.where({ deletedAt: null });
-	next();
 });
 
 const vendor = mongoose.model('Vendor', vendorSchema);

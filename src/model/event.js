@@ -51,7 +51,6 @@ eventSchema.index({ parentEvent: 1, code: 1 }, { unique: true });
 
 eventSchema.pre(/^find/, function (next) {
 	this.where({ deletedAt: null });
-	next();
 });
 
 const Event = mongoose.model('Event', eventSchema);

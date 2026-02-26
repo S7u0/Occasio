@@ -29,7 +29,6 @@ const permissionSchema = new mongoose.Schema(
 
 permissionSchema.pre(/^find/, function (next) {
 	this.where({ deletedAt: null });
-	next();
 });
 
 module.exports = {
