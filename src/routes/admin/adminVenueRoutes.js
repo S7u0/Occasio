@@ -4,11 +4,14 @@ const { descriptor } = require('../../middleware/descriptor');
 const adminController = require('../../controller/admin/adminVenueController.js');
 const wrapAsync = require('../../utils/wrapAsync');
 const { isAuth } = require('../../middleware/authenticate');
+const validateBody = require('../../middleware/validateBody');
+const { venueSchema } = require('../../utils/schema');
 
 router.post(
     '/venue/create',
     isAuth,
     descriptor('venue.create', 'Create a new venue'),
+    validateBody(venueSchema),
     wrapAsync(adminController.createVenueController),
 );
 
@@ -23,6 +26,7 @@ router.get(
     '/venue/:id',
     isAuth,
     descriptor('venue.view', 'View venue details'),
+
     wrapAsync(adminController.viewVenueDetailsController),
 );
 

@@ -4,11 +4,14 @@ const adminController = require('../../controller/admin/adminServiceController')
 const { isAuth } = require('../../middleware/authenticate');
 const wrapAsync = require('../../utils/wrapAsync');
 const { descriptor } = require('../../middleware/descriptor');
+const validateBody = require('../../middleware/validateBody');
+const { serviceSchema } = require('../../utils/schema');
 
 router.post(
     '/service/create',
     isAuth,
     descriptor('service.create', 'Create a new service'),
+    validateBody(serviceSchema),
     wrapAsync(adminController.createServiceController),
 );
 

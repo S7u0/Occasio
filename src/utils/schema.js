@@ -68,10 +68,52 @@ const venueSchema = Joi.object({
 	name: Joi.string().min(3).max(50).required(),
 });
 
+const vendorSchema = Joi.object({
+	profile: Joi.object({
+		businessName: Joi.string().min(3).max(100).required(),
+		ownerName: Joi.string().min(3).max(100).required(),
+		address: Joi.string().max(200),
+		service: Joi.string().max(100),
+		yearsOfExperience: Joi.number().min(0),
+		description: Joi.string().max(500),
+		photo: Joi.string().uri(),
+		location: Joi.object({
+			city: Joi.string().required(),
+			state: Joi.string().required(),
+			country: Joi.string().required(),
+		}),
+		venuePreferences: Joi.array().items(this.objectId),
+		customVenue: Joi.string().max(150),
+		eventPreferences: Joi.array().items(this.objectId),
+	}),
+});
+
+const serviceSchema = Joi.object({
+	code: Joi.string()
+		.uppercase()
+		.pattern(/^[A-Z_]+$/)
+		.required(),
+	name: Joi.string().min(3).max(100).required(),
+	parentService: this.objectId,
+	isActive: Joi.boolean().default(true),
+});
+
+const eventSchema = Joi.object({
+	code: Joi.string()
+		.pattern(/^[A-Z_]+$/)
+		.required(),
+	name: Joi.string().min(3).max(100).required(),
+	parentEvent: this.objectId,
+	isActive: Joi.boolean().default(true),
+});
+
 module.exports = {
 	registerSchema,
 	loginSchema,
 	profileSchema,
 	weddingSchema,
-    venueSchema
+	venueSchema,
+	vendorSchema,
+	serviceSchema,
+	eventSchema,
 };

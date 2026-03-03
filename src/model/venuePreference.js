@@ -46,7 +46,6 @@ const venuePreferenceSchema = new Schema(
 
 venuePreferenceSchema.pre(/^find/, function (next) {
 	this.where({ deletedAt: null });
-	next();
 });
 
 const venuePreference = mongoose.model('Venue', venuePreferenceSchema);

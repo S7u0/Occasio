@@ -5,12 +5,12 @@ const wrapAsync = require('../utils/wrapAsync');
 const { isAuth } = require('../middleware/authenticate');
 const router = express.Router();
 const { 
-    vendorProfileSchema 
+    vendorSchema 
 } = require('../utils/schema');
 
 router.post(
     '/profile', 
-    validateBody(vendorProfileSchema),
+    validateBody(vendorSchema),
     isAuth,
     wrapAsync(createVendorProfile.createVendorProfile)
 );

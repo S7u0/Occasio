@@ -34,6 +34,14 @@ const vendorSchema = new Schema(
 			photo: {
 				type: String,
 			},
+			location: {
+				city: String,
+				state: String,
+				country: {
+					type: String,
+					default: 'India',
+				},
+			},
 			venuePreferences: [
 				{
 					type: mongoose.Types.ObjectId,
@@ -73,6 +81,9 @@ const vendorSchema = new Schema(
 		isActive: {
 			type: Boolean,
 			default: true,
+		},
+		deletedAt: {
+			type: Date,
 		},
 	},
 	{ timestamps: true },

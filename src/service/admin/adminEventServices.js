@@ -15,7 +15,7 @@ const createEvent = async (data) => {
 const viewEvents = async (page, limit) => {
 
 	const filter = {
-		deletedAt: null,   v
+		deletedAt: null,
 	};
 
 	const totalRecords = await Event.countDocuments(filter);

@@ -4,8 +4,8 @@ const sendResponse = require('../utils/response');
 const user = require('../model/user');
 
 const createVendorProfile = async (req, res) => {
-	console.log('JWT role:', req.user.role.name);
-	if (req.user.role.name !== 'VENDOR') {
+	console.log('JWT role:', req.user.role);
+	if (req.user.role !== 'VENDOR') {
 		return sendResponse(res, HTTP_STATUS.FORBIDDEN, {
 			message: 'Only vendors can create vendor profile',
 		});

@@ -12,7 +12,25 @@ const createVenue = async (data) => {
 };
 
 const viewVenues = async (page, limit) => {
-    return await pagination(page, limit, venuePreference);
+    const filter = {
+        deletedAt: null,
+    };
+    const totalRecords = await venuePreference.countDocuments(filter);
+
+    const paginations = pagination(
+        page,
+        limit,
+        totalRecords,
+    );
+    const records = await venuePreference.find(filter)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+    return {
+        ...paginations,
+        records,
+    };
 };
 
 const viewVenueDetails = async (venueId) => {

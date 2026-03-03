@@ -12,7 +12,26 @@ const createService = async (serviceData) => {
 };
 
 const viewServices = async (page, limit) => {
-    return await pagination(page, limit, Service);
+    const filter = {
+        deletedAt: null,
+    };
+
+    const totalRecords = await Service.countDocuments(filter);
+
+    const paginations = pagination(
+        page,
+        limit,
+        totalRecords,
+    );
+    const records = await Service.find(filter)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+    return {
+        ...paginations,
+        records,
+    };
 };
 
 const viewServiceDetails = async (serviceId) => {
