@@ -1,41 +1,72 @@
 const sendResponse = require('../utils/response');
 const HTTP_STATUS = require('../constants/statusCodes');
-const { profileUser, weddingInfoUser, vendorListService } = require('../service/clientServices');
+const {
+	profileUser,
+	weddingInfoUser,
+	vendorListService
+} = require('../service/clientServices');
 
 const profile = async (req, res) => {
-	if (req.user.role.name !== 'CLIENT') {
-		return sendResponse(res, HTTP_STATUS.FORBIDDEN, {
-			message: 'Only clients can update their profile',
+	if (req.user.role !== 'CLIENT') {
+		return sendResponse({
+			res, 
+			statusCode: HTTP_STATUS.FORBIDDEN,
+			message: 'Only clients can create their profile',
 		});
 	}
 	const data = {
 		user: req.user.id,
 		profile: req.body.profile,
 	};
-	console.log(data);
 
 	const result = await profileUser(data);
-	res.status(200).json(result);
+	return sendResponse({        
+			res, 
+			statusCode: HTTP_STATUS.OK, 
+			message: 'Client Profile Created Successfully',
+			data: result
+		});
 };
 
 const weddingInfo = async (req, res) => {
+	if (req.user.role !== 'CLIENT') {
+		return sendResponse({
+			res, 
+			statusCode: HTTP_STATUS.FORBIDDEN,
+			message: 'Only clients can update their wedding info',
+		});
+	}
 	const userId = req.user._id || req.user.id;
-
-	await weddingInfoUser(userId, req.body);
-
-	return sendResponse(res, HTTP_STATUS.OK, 'Wedding info updated successfully');
+	const wedding = await weddingInfoUser(userId, req.body);
+	return sendResponse({
+		res, 
+		statusCode: HTTP_STATUS.OK, 
+		message: 'Wedding info updated successfully',
+		data: wedding
+	});
 };
 
 const vendorList = async (req, res) => {
+	if (req.user.role !== 'CLIENT') {
+		return sendResponse({
+			res, 
+			statusCode: HTTP_STATUS.FORBIDDEN,
+			message: 'Only clients can view the vendor list',
+		});
+	}
 	const userId = req.user._id || req.user.id;
 	const vendors = await vendorListService(userId);
 	const cleanedVendors = vendors.map((v) => ({
-	profile: v.profile,
-}));	
-	res.status(200).json({
+		profile: v.profile,
+	}));
+	return sendResponse({
+		res,
+		statusCode: HTTP_STATUS.OK,
 		message: 'Matched vendors fetched',
-		vendors: cleanedVendors,
-	});	
+		data: {
+			vendors: cleanedVendors
+		},
+	});
 };
 
 module.exports = {

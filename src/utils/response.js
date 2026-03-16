@@ -1,4 +1,4 @@
-const sendResponse = (res, statusCode, message, data, meta) => {
+const sendResponse = ({res, statusCode, message, data, meta}) => {
 	const success = statusCode >= 200 && statusCode < 300;
 
 	const response = {

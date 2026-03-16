@@ -6,7 +6,9 @@ const user = require('../model/user');
 const createVendorProfile = async (req, res) => {
 	console.log('JWT role:', req.user.role);
 	if (req.user.role !== 'VENDOR') {
-		return sendResponse(res, HTTP_STATUS.FORBIDDEN, {
+		return sendResponse({
+			res, 
+			statusCode: HTTP_STATUS.FORBIDDEN,
 			message: 'Only vendors can create vendor profile',
 		});
 	}
@@ -15,7 +17,11 @@ const createVendorProfile = async (req, res) => {
 		profile: req.body.profile,
 	};
 	const vendor = await vendorProfile.createVendorProfile(data);
-	return sendResponse(res, HTTP_STATUS.CREATED, vendor);
+	return sendResponse({
+		res, 
+		statusCode: HTTP_STATUS.CREATED, 
+		data: vendor
+	});
 };
 
 const clientList = async (req, res) => {
@@ -25,9 +31,13 @@ const clientList = async (req, res) => {
 		profile: c.profile, 
 		wedding: c.wedding,
 	}));
-	res.status(200).json({
+	return sendResponse({
+		res,
+		statusCode: HTTP_STATUS.OK,
 		message: 'Matched clients fetched',
-		clients: cleanedClients,
+		data: {
+			clients: cleanedClients
+		},
 	});
 };
 

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const clientController = require('../controller/clientController');
 const { isAuth } = require('../middleware/authenticate');
-const validateBody = require('../middleware/validateBody');
+const validateRequest = require('../middleware/validateBody');
 const wrapAsync = require('../utils/wrapAsync');
 const {
     profileSchema,
@@ -13,14 +13,14 @@ const {
 
 router.post(
 	'/profile',
-	validateBody(profileSchema),
+	validateRequest(profileSchema),
 	isAuth,
 	wrapAsync(clientController.profile)
 );
 
 router.post(
 	'/weddingInfo',
-	validateBody(weddingSchema),
+	validateRequest(weddingSchema),
 	isAuth,
 	wrapAsync(clientController.weddingInfo)
 );

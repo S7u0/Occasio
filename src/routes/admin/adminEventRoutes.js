@@ -4,15 +4,14 @@ const { descriptor } = require('../../middleware/descriptor');
 const adminController = require('../../controller/admin/adminEventController');
 const wrapAsync = require('../../utils/wrapAsync');
 const { isAuth } = require('../../middleware/authenticate');
-const validateBody = require('../../middleware/validateBody');
+const validateRequest = require('../../middleware/validateBody');
 const { eventSchema } = require('../../utils/schema');
 
 router.post(
 	'/event/create',
 	isAuth,
 	descriptor('event.create', 'Create a new event'),
-	validateBody(eventSchema),
-
+	validateRequest(eventSchema),
 	wrapAsync(adminController.createEventController),
 );
 

@@ -22,9 +22,6 @@ const vendorSchema = new Schema(
 			address: {
 				type: String,
 			},
-			service: {
-				type: String,
-			},
 			yearsOfExperience: {
 				type: Number,
 			},
@@ -35,11 +32,17 @@ const vendorSchema = new Schema(
 				type: String,
 			},
 			location: {
-				city: String,
-				state: String,
+				city: {
+					type: Schema.Types.ObjectId,
+					ref: 'City',
+				},
+				state: {
+					type: Schema.Types.ObjectId,
+					ref: 'State',
+				},
 				country: {
-					type: String,
-					default: 'India',
+					type: Schema.Types.ObjectId,
+					ref: 'Country',
 				},
 			},
 			venuePreferences: [

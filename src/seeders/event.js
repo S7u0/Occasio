@@ -60,7 +60,6 @@ const seedEvents = async () => {
 					code: event.code,
 					parentEvent: parentEventId,
 					isActive: true,
-					deletedAt: null,
 				},
 			},
 			{

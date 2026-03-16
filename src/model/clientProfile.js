@@ -30,11 +30,17 @@ const clientSchema = new Schema(
 			},
 
 			location: {
-				city: String,
-				state: String,
+				city: {
+					type: Schema.Types.ObjectId,
+					ref: 'City',
+				},
+				state: {
+					type: Schema.Types.ObjectId,
+					ref: 'State',
+				},
 				country: {
-					type: String,
-					default: 'India',
+					type: Schema.Types.ObjectId,
+					ref: 'Country',
 				},
 			},
 		},
@@ -83,6 +89,10 @@ const clientSchema = new Schema(
 					required: true,
 				},
 			],
+		},
+
+		deletedAt: {
+			type: Date,
 		},
 
 		isActive: {

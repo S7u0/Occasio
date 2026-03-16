@@ -1,6 +1,6 @@
 const createVendorProfile = require('../controller/vendorController');
 const express = require('express');
-const validateBody = require('../middleware/validateBody');
+const validateRequest    = require('../middleware/validateBody');
 const wrapAsync = require('../utils/wrapAsync');
 const { isAuth } = require('../middleware/authenticate');
 const router = express.Router();
@@ -10,7 +10,7 @@ const {
 
 router.post(
     '/profile', 
-    validateBody(vendorSchema),
+    validateRequest(vendorSchema),
     isAuth,
     wrapAsync(createVendorProfile.createVendorProfile)
 );

@@ -1,6 +1,6 @@
-const { string } = require('joi');
 const { client } = require('../../model/clientProfile');
 const { vendor } = require('../../model/vendorProfile');
+const { City } = require('../../model/city');
 
 const getGrowth = async (year, startMonth, endMonth) => {
 	const totalClients = await client.countDocuments();
@@ -75,49 +75,39 @@ const getGrowth = async (year, startMonth, endMonth) => {
 };
 
 const getLocation = async (city) => {
-	if (!city) {
-		throw new Error('City is required');
-	}
+	const cityMatch = city ? { 'profile.location.city': city } : {};
+	const cityData = await City.aggregate([
+		{ $match: cityMatch },
 
-	// Case-insensitive city match
-	const cityMatch = {
-		"profile.location.city": { $regex: `^${city}$`, $options: 'i' },
-	};
-
-	// 🔹 Client aggregation
-	const clientData = await client.aggregate([
 		{
-			$match: cityMatch,
+			$lookup: {
+				from: 'clients',
+				localField: '_id',
+				foreignField: 'profile.location.city',
+				as: 'clients',
+			},
 		},
+
 		{
-			$group: {
-				_id: '$profile.location.city',
-				count: { $sum: 1 },
+			$lookup: {
+				from: 'vendors',
+				localField: '_id',
+				foreignField: 'profile.location.city',
+				as: 'vendors',
+			},
+		},
+
+		{
+			$project: {
+				_id: 0,
+				city: '$name',
+				clients: { $size: '$clients' },
+				vendors: { $size: '$vendors' },
 			},
 		},
 	]);
-
-	// 🔹 Vendor aggregation
-	const vendorData = await vendor.aggregate([
-		{
-			$match: cityMatch,
-		},
-		{
-			$group: {
-				_id: '$profile.location.city',
-				count: { $sum: 1 },
-			},
-		},
-	]);
-
-	const totalClients = clientData.length > 0 ? clientData[0].count : 0;
-	const totalVendors = vendorData.length > 0 ? vendorData[0].count : 0;
-
 	return {
-		city,
-		totalClients,
-		totalVendors,
-		totalUsers: totalClients + totalVendors,
+		cityData,
 	};
 };
 

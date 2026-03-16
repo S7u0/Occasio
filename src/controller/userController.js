@@ -7,19 +7,34 @@ const {
 } = require('../service/userServices');
 
 const register = async (req, res) => {
-	await registerUser(req.body);
+	const register = await registerUser(req.body);
 	console.log(req.body);
-	return sendResponse(res, HTTP_STATUS.CREATED, 'User registered successfully');
+	return sendResponse({
+		res, 
+		statusCode: HTTP_STATUS.CREATED, 
+		message: 'User registered successfully',
+		data: register
+	});
 };
 
 const login = async (req, res) => {
 	const tokens = await loginUser(req.body);
-	return sendResponse(res, HTTP_STATUS.OK, 'Login successful', tokens);
+	return sendResponse({
+		res, 
+		statusCode: HTTP_STATUS.OK, 
+		message: 'Login successful', 
+		data: tokens 
+	});
 };
 
 const view = async (req, res) => {
 	const user = await userService.viewUser(req.body);
-	res.json(user);
+	return sendResponse({
+		res, 
+		statusCode: HTTP_STATUS.OK, 
+		message: 'User fetched successfully',
+		data: user 
+	});
 };
 
 module.exports = {

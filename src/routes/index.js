@@ -9,6 +9,7 @@ const adminServiceRoutes = require('./admin/adminServiceRoutes');
 const adminDashboardRoutes = require('./admin/adminDashboardRoutes');
 const vendorRoutes = require('./vendorRoutes');
 const clientRoutes = require('./clientRoutes');
+const masterRoutes = require('./masterRoutes');
 
 router.use('/role', roleRoutes);
 router.use('/user', userRoutes);
@@ -18,5 +19,6 @@ router.use('/admin', adminVenueRoutes);
 router.use('/admin', adminServiceRoutes);
 router.use('/admin', adminDashboardRoutes);
 router.use('/vendor', vendorRoutes);
+router.use('/', masterRoutes);
 
 module.exports = router;

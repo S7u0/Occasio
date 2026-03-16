@@ -7,11 +7,11 @@ const isAuth = (req, res, next) => {
 		const authHeader = req.headers.authorization;
 
 		if (!authHeader || !authHeader.startsWith('Bearer ')) {
-			return sendResponse(
+			return sendResponse({
 				res,
-				HTTP_STATUS.UNAUTHORIZED,
-				'Authentication required'
-			);
+				statusCode: HTTP_STATUS.UNAUTHORIZED,
+				message: 'Authentication required'
+			});
 		}
 
 		const token = authHeader.split(' ')[1];
@@ -19,7 +19,11 @@ const isAuth = (req, res, next) => {
 		const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
 
 		if (!decoded?.id) {
-			return sendResponse(res, HTTP_STATUS.UNAUTHORIZED, 'Invalid token');
+			return sendResponse({
+				res,
+				statusCode: HTTP_STATUS.UNAUTHORIZED,
+				message: 'Invalid token'
+			});
 		}
 
 		req.user = {
@@ -29,7 +33,11 @@ const isAuth = (req, res, next) => {
 
 		next();
 	} catch (err) {
-		return sendResponse(res, HTTP_STATUS.UNAUTHORIZED, 'Authentication failed');
+		return sendResponse({
+			res,
+			statusCode: HTTP_STATUS.UNAUTHORIZED,
+			message: 'Authentication failed'
+		});
 	}
 };
 

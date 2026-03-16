@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const bcrypt = require('bcrypt');
-
 const userSchema = new Schema(
 	{
 		username: {
@@ -50,11 +48,6 @@ const userSchema = new Schema(
 		timestamps: true,
 	},
 );
-
-userSchema.pre('save', async function () {
-	if (!this.isModified('password')) return;
-	this.password = await bcrypt.hash(this.password, 15);
-});
 
 userSchema.pre(/^find/, function (next) {
 	this.where({ deletedAt: null });

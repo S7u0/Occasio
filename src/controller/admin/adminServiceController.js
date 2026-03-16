@@ -6,7 +6,12 @@ const createServiceController = async (req, res) => {
     const serviceData = req.body;
     serviceData.createdBy = req.user.id;
     const newService = await adminService.createService(serviceData);
-    return sendResponse(res, HTTP_STATUS.CREATED, newService);
+    return sendResponse({
+        res, 
+        statusCode: HTTP_STATUS.CREATED,
+        message: 'Service Create Successfully',
+        data:newService 
+    });
 };
 
 const viewServicesController = async (req, res) => {
@@ -14,14 +19,23 @@ const viewServicesController = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
 
     const services = await adminService.viewServices(page, limit);
-    return sendResponse(res, HTTP_STATUS.OK, "Services retrieved successfully", services);
+    return sendResponse({
+        res, 
+        statusCode: HTTP_STATUS.OK, 
+        message: "Services retrieved successfully",
+        data: services 
+    });
 };
 
 const viewServiceDetailsController = async (req, res) => {
     const serviceId = req.params.id;
     const service = await adminService.viewServiceDetails(serviceId);
     if (!service) {
-        return sendResponse(res, HTTP_STATUS.NOT_FOUND, 'Service not found');
+        return sendResponse({
+            res, 
+            statusCode: HTTP_STATUS.NOT_FOUND,
+            message: 'Service not found'
+        });
     }
     const cleanedService = {
         name: service.name,
@@ -31,7 +45,12 @@ const viewServiceDetailsController = async (req, res) => {
             code: service.parentService.code,
         } : null,
     };
-    return sendResponse(res, HTTP_STATUS.OK, { message: "Service details retrieved successfully", data: cleanedService });
+    return sendResponse({ 
+        res, 
+        statusCode: HTTP_STATUS.OK,
+        message: "Service details retrieved successfully", 
+        data: cleanedService 
+    });
 };
 
 const updateServiceController = async (req, res) => {
@@ -41,9 +60,18 @@ const updateServiceController = async (req, res) => {
     updateData.updatedBy = updatedBy;
     const updatedService = await adminService.updateService(serviceId, updateData);
     if (!updatedService) {
-        return sendResponse(res, HTTP_STATUS.NOT_FOUND, 'Service not found');
+        return sendResponse({
+            res, 
+            statusCode: HTTP_STATUS.NOT_FOUND, 
+            message: 'Service not found'
+        });
     }
-    return sendResponse(res, HTTP_STATUS.OK, updatedService);
+    return sendResponse({
+        res, 
+        statusCode: HTTP_STATUS.OK,
+        message: 'Service Updated Successfully',
+        data: updatedService 
+    });
 };
 
 const deleteServiceController = async (req, res) => {
@@ -52,9 +80,18 @@ const deleteServiceController = async (req, res) => {
     const deletedService = await adminService.deleteService(serviceId, userId);
     
     if (!deletedService) {
-        return sendResponse(res, HTTP_STATUS.NOT_FOUND, 'Service not found');
+        return sendResponse({
+            res, 
+            statusCode: HTTP_STATUS.NOT_FOUND, 
+            message: 'Service not found'
+        });
     }
-    return sendResponse(res, HTTP_STATUS.OK, 'Service deleted successfully');
+    return sendResponse({
+        res, 
+        statusCode: HTTP_STATUS.OK, 
+        message: 'Service deleted successfully',
+        data: deletedService
+    });
 };
 
 module.exports = {

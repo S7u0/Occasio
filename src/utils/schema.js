@@ -1,6 +1,7 @@
 const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 
-exports.objectId = Joi.string().pattern(/^[0-9a-fA-F]{24}$/);
+exports.objectId = Joi.objectId();
 
 const registerSchema = Joi.object({
 	username: Joi.string().min(3).max(30).required(),
@@ -12,7 +13,7 @@ const registerSchema = Joi.object({
 			'string.pattern.base': 'Phone number must be 10 digits',
 		}),
 	password: Joi.string().min(6).required(),
-	role: Joi.string().valid('ADMIN', 'CLIENT', 'USER').default('USER'),
+	role: Joi.string().valid('ADMIN', 'CLIENT', 'VENDOR').default('USER'),
 });
 
 const loginSchema = Joi.object({
@@ -21,9 +22,6 @@ const loginSchema = Joi.object({
 });
 
 const profileSchema = Joi.object({
-	username: Joi.string().min(3).max(30).required(),
-	email: Joi.string().email().required(),
-	phone: Joi.string().min(10).required(),
 	profile: Joi.object({
 		gender: Joi.string()
 			.valid('MALE', 'FEMALE', 'OTHER', 'Male', 'Female', 'Other')
@@ -33,9 +31,9 @@ const profileSchema = Joi.object({
 		photo: Joi.string().uri(),
 
 		location: Joi.object({
-			city: Joi.string().required(),
-			state: Joi.string().required(),
-			country: Joi.string().required(),
+			city: Joi.objectId().required(),
+			state: Joi.objectId().required(),
+			country: Joi.objectId().required(),
 		}),
 	}),
 });
@@ -73,14 +71,13 @@ const vendorSchema = Joi.object({
 		businessName: Joi.string().min(3).max(100).required(),
 		ownerName: Joi.string().min(3).max(100).required(),
 		address: Joi.string().max(200),
-		service: Joi.string().max(100),
 		yearsOfExperience: Joi.number().min(0),
 		description: Joi.string().max(500),
 		photo: Joi.string().uri(),
 		location: Joi.object({
-			city: Joi.string().required(),
-			state: Joi.string().required(),
-			country: Joi.string().required(),
+			city: Joi.objectId().required(),
+			state: Joi.objectId().required(),
+			country: Joi.objectId().required(),
 		}),
 		venuePreferences: Joi.array().items(this.objectId),
 		customVenue: Joi.string().max(150),
@@ -107,6 +104,14 @@ const eventSchema = Joi.object({
 	isActive: Joi.boolean().default(true),
 });
 
+const querySchema = Joi.object({
+	page: Joi.number().integer().min(1).empty('').default(1).optional(),
+	limit: Joi.number().integer().min(1).max(100).empty('').default(10).optional(),
+	search: Joi.string().max(50).empty('').optional(),
+	stateId: Joi.string().hex().length(24).optional(),
+	countryId: Joi.string().hex().length(24).optional()
+});
+
 module.exports = {
 	registerSchema,
 	loginSchema,
@@ -116,4 +121,5 @@ module.exports = {
 	vendorSchema,
 	serviceSchema,
 	eventSchema,
+	querySchema,
 };
