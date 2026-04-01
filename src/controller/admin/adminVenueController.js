@@ -1,0 +1,106 @@
+const sendResponse = require('../../utils/response.js');
+const HTTP_STATUS = require('../../constants/statusCodes');
+const {
+	createVenue,
+	viewVenues,
+	viewVenueDetails,
+	updateVenue,
+	deleteVenue,
+} = require('../../service/admin/adminVenueServices.js');
+
+const createVenueController = async (req, res) => {
+    const data = req.body;
+    const createdBy = req.user.id;
+    data.createdBy = createdBy;
+    const venue = await createVenue(data);
+    return sendResponse({
+        res, 
+        statusCode: HTTP_STATUS.CREATED, 
+        message: 'Venue created successfully', 
+        data: venue
+    });
+};
+
+const viewVenuesController = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const venues = await viewVenues(page, limit);
+    return sendResponse({
+        res, 
+        statusCode: HTTP_STATUS.OK, 
+        message: 'Venues retrieved successfully',
+        data: venues
+    });
+};
+
+const viewVenueDetailsController = async (req, res) => {
+    const venueId = req.params.id;
+    const venue = await viewVenueDetails(venueId);
+    if (!venue) {
+        return sendResponse({
+            res, 
+            statusCode: HTTP_STATUS.NOT_FOUND, 
+            message:'Venue not found'
+        });
+    }
+    const cleanedVenue = {
+        name: venue.name,
+        code: venue.code,
+    };
+    return sendResponse({        
+        res, 
+        statusCode: HTTP_STATUS.OK, 
+        message: 'Venue Details retrieved successfully',
+        data: cleanedVenue 
+    });
+};
+
+const updateVenueController = async (req, res) => {
+    const venueId = req.params.id;
+    if (!venueId) {
+        return sendResponse({
+            res, 
+            statusCode: HTTP_STATUS.NOT_FOUND, 
+            message: 'Venue not found'
+        });
+    }
+    const data = req.body;
+    const updatedBy = req.user.id;
+    data.updatedBy = updatedBy;
+    const updatedVenue = await updateVenue(venueId, data);
+    return sendResponse({        
+        res, 
+        statusCode: HTTP_STATUS.OK, 
+        message: 'Venue Updated successfully',
+        data: updatedVenue 
+    });
+};
+
+const deleteVenueController = async (req, res) => {
+    const venueId = req.params.id;
+    if (!venueId) {
+        return sendResponse({
+            res,
+            statusCode: HTTP_STATUS.NOT_FOUND, 
+            message: 'Venue not found'
+        });
+    }
+    const data = req.user;
+    data.deletedBy = req.user.id;
+    const deletedVenue = await deleteVenue(venueId, data);
+    return sendResponse({        
+        res, 
+        statusCode: HTTP_STATUS.OK, 
+        message: 'Venue Deleted successfully',
+        data: deletedVenue 
+    });
+};
+
+module.exports = {
+    createVenueController,
+    viewVenuesController,
+    viewVenueDetailsController,
+    updateVenueController,
+    deleteVenueController,
+};
